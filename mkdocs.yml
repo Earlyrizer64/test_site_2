@@ -1,1 +1,5 @@
 site_name: Test Site 2
+
+nav: 
+  - Home: index.md
+  - Example Page: 06_MD_run_using_py.md
