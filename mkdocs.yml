@@ -4,3 +4,7 @@ nav:
   - Home: index.md
   - Example Page: 06_MD_run_using_py.md
 
+theme:
+  name: material
+  palette:
+    primary: indigo
