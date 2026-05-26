@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Example Page - Test Site 2</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Test Site 2</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Example Page</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#tutorial-6-building-an-md-engine-from-scratch" class="nav-link">Tutorial 6: Building an MD Engine from Scratch</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-introduction" class="nav-link">1. Introduction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#step-1-imports-global-settings" class="nav-link">Step 1: Imports &amp; Global Settings</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#step-2-the-initial-state" class="nav-link">Step 2: The Initial State</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#step-3-the-forces-lennard-jones" class="nav-link">Step 3: The Forces (Lennard-Jones)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#step-4-the-integrator-velocity-verlet" class="nav-link">Step 4: The Integrator (Velocity Verlet)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#step-5-the-simulation-loop" class="nav-link">Step 5: The Simulation Loop</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exercise-1-the-broken-physics-explosion" class="nav-link">Exercise 1: The Broken Physics (Explosion)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exercise-2-solid-phase-crystallization" class="nav-link">Exercise 2: Solid Phase (Crystallization)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exercise-3-how-long-does-md-actually-take" class="nav-link">Exercise 3: How Long Does MD Actually Take?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="tutorial-6-building-an-md-engine-from-scratch">Tutorial 6: Building an MD Engine from Scratch</h1>
+<p><strong>Objective:</strong> Understand the algorithms inside LAMMPS by building a modular MD engine in Python, step-by-step.</p>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>In previous tutorials, we treated LAMMPS as a "black box." Now, we will open that box.</p>
+<p>We will write a Python script that explicitly performs the three core tasks of any MD simulation:
+1.  <strong>Initialize:</strong> Create atoms with positions and velocities.
+2.  <strong>Calculate Forces:</strong> Use the Lennard-Jones potential.
+3.  <strong>Integrate:</strong> Move atoms using Newton's laws (Velocity Verlet).</p>
+<hr />
+<h2 id="step-1-imports-global-settings">Step 1: Imports &amp; Global Settings</h2>
+<p>First, we need to load the necessary libraries and define the "Universe" constants.
+* <strong>Box Size:</strong> The width of our periodic container.
+* <strong>Sigma/Epsilon:</strong> The fundamental units of size and energy for our atoms.</p>
+<p><strong>Run this cell first:</strong></p>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from IPython.display import HTML
+
+# Make the plots look professional
+plt.style.use('seaborn-v0_8-whitegrid')
+plt.rcParams['figure.figsize'] = (6, 6)
+plt.rcParams['font.size'] = 12
+
+# GLOBAL CONSTANTS (The &quot;Universe&quot; Settings)
+BOX_SIZE = 10.0      # The size of our container
+SIGMA = 1.0          # The size of an atom
+EPSILON = 1.0        # The strength of attraction
+MASS = 1.0           # The mass of an atom
+
+</code></pre>
+<hr />
+<h2 id="step-2-the-initial-state">Step 2: The Initial State</h2>
+<p>An MD simulation needs to know two things about every atom at :</p>
+<ol>
+<li><strong>Position ():</strong> Where is it?</li>
+<li><strong>Velocity ():</strong> Where is it going?</li>
+</ol>
+<p>We will generate random positions and velocities. Crucially, we must subtract the "Center of Mass" velocity so our entire gas cloud doesn't drift sideways.</p>
+<p><strong>Run this cell to visualize the starting state:</strong></p>
+<pre><code class="language-python"># --- LOGIC: STRICT INITIALIZATION ---
+N_PARTICLES = 20
+MIN_DIST = 1.12 * SIGMA  # Distance where atoms repel (2^(1/6))
+MAX_ATTEMPTS = 5000      
+
+positions = np.zeros((N_PARTICLES, 2))
+
+# 1. Place Atoms (Checking for Overlaps + Boundaries)
+for i in range(N_PARTICLES):
+    placed = False
+    attempts = 0
+    while not placed and attempts &lt; MAX_ATTEMPTS:
+        candidate = np.random.rand(2) * BOX_SIZE
+
+        if i == 0:
+            positions[i] = candidate
+            placed = True
+        else:
+            # Calculate distance to all existing atoms
+            delta = positions[:i] - candidate
+
+            # --- PERIODIC BOUNDARY CHECK ---
+            # If atoms are on opposite edges (0 and 10), they are actually close!
+            delta -= np.round(delta / BOX_SIZE) * BOX_SIZE 
+
+            dist_sq = np.sum(delta**2, axis=1)
+
+            # If ALL existing atoms are far enough away, we accept this spot
+            if np.all(dist_sq &gt; MIN_DIST**2):
+                positions[i] = candidate
+                placed = True     
+        attempts += 1
+
+    if not placed:
+        print(f&quot;Warning: Failed to place particle {i}. Box is too full.&quot;)
+
+# 2. Generate Velocities
+# Random values between -0.5 and 0.5
+velocities = (np.random.rand(N_PARTICLES, 2) - 0.5)
+
+# Center of Mass Correction
+# We subtract the average so the gas doesn't drift
+velocities -= np.mean(velocities, axis=0)
+
+# --- VISUALIZATION ---
+fig, ax = plt.subplots(figsize=(6,6))
+ax.set_xlim(0, BOX_SIZE); ax.set_ylim(0, BOX_SIZE)
+ax.set_title(f&quot;Initial State (N={N_PARTICLES})&quot;)
+ax.set_xlabel(&quot;Position X&quot;); ax.set_ylabel(&quot;Position Y&quot;)
+
+# 1. Draw Atoms (Blue Circles)
+ax.scatter(positions[:,0], positions[:,1], s=300, color='skyblue', edgecolors='black', alpha=0.8, label='Atom')
+
+# 2. Draw Velocities (Red Arrows)
+# Quiver plots arrows at (x,y) with components (u,v)
+ax.quiver(positions[:,0], positions[:,1], 
+          velocities[:,0], velocities[:,1], 
+          color='red', width=0.005, scale=5, label='Velocity Vector')
+
+ax.legend(loc='upper right')
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.show()
+
+</code></pre>
+<hr />
+<h2 id="step-3-the-forces-lennard-jones">Step 3: The Forces (Lennard-Jones)</h2>
+<p>Atoms interact via forces. We use the <strong>Lennard-Jones Potential</strong>.</p>
+<ul>
+<li><strong>Too Close?</strong> Strong Repulsion (Positive force).</li>
+<li><strong>Just Right?</strong> Weak Attraction (Negative force).</li>
+<li><strong>Too Far?</strong> Zero force (Cutoff).</li>
+</ul>
+<p>This block defines the <code>compute_forces</code> function. It calculates the force on every pair of atoms. It also implements <strong>Periodic Boundary Conditions</strong> (Minimum Image Convention), ensuring atoms interact across the box edges.</p>
+<p><strong>Run this cell to define the physics and see the force curve:</strong></p>
+<pre><code class="language-python"># --- LOGIC ---
+# Pre-calculate the potential at the cutoff distance to shift the curve
+CUTOFF = 3.0 * SIGMA
+inv_rc2 = (SIGMA**2) / (CUTOFF**2)
+inv_rc6 = inv_rc2**3
+E_CUTOFF = 4 * EPSILON * (inv_rc6**2 - inv_rc6)
+
+def compute_forces(pos):
+    &quot;&quot;&quot;
+    Input: Positions of all atoms
+    Output: Acceleration (Force/Mass) of all atoms, Potential Energy
+    &quot;&quot;&quot;
+    N = pos.shape[0]
+    forces = np.zeros_like(pos)
+    potential_energy = 0.0
+
+    for i in range(N):
+        for j in range(i + 1, N): # Loop over pairs
+            delta = pos[i] - pos[j]
+            delta -= np.round(delta / BOX_SIZE) * BOX_SIZE # Periodic BC
+            r_sq = np.sum(delta**2)
+
+            if r_sq &lt; 0.01: r_sq = 0.01
+
+            # Optimization Cutoff
+            if r_sq &lt; CUTOFF**2:
+                inv_r2 = (SIGMA**2) / r_sq
+                inv_r6 = inv_r2**3
+
+                # Force (unchanged by the energy shift)
+                f_scalar = (24 * EPSILON / r_sq) * (2 * inv_r6**2 - inv_r6)
+
+                force_vec = f_scalar * delta
+                forces[i] += force_vec
+                forces[j] -= force_vec
+
+                # ENERGY CORRECTION: Subtract E_CUTOFF
+                # This ensures Potential Energy is exactly 0.0 at the cutoff line
+                pair_energy = 4 * EPSILON * (inv_r6**2 - inv_r6) - E_CUTOFF
+                potential_energy += pair_energy
+
+    return forces / MASS, potential_energy
+
+# --- VISUALIZATION OF THE RULE ---
+# We plot the &quot;Shifted&quot; potential to show it hits exactly zero
+r = np.linspace(0.85, 3.2, 100)
+E = 4 * EPSILON * ((SIGMA/r)**12 - (SIGMA/r)**6)
+# Apply shift to plotting data too for consistency
+E[r &gt; CUTOFF] = 0
+E[r &lt;= CUTOFF] -= E_CUTOFF
+
+plt.figure(figsize=(8,4))
+plt.plot(r, E, linewidth=3, color='purple')
+plt.axhline(0, color='k', linestyle='--')
+plt.axvline(1.0, color='green', linestyle='--', label='Sigma')
+plt.axvline(CUTOFF, color='red', linestyle=':', label='Cutoff (Shifted to 0)')
+plt.title(&quot;Block 2: The Rules (Shifted Lennard-Jones)&quot;)
+plt.xlabel(&quot;Distance&quot;); plt.ylabel(&quot;Energy&quot;)
+plt.legend()
+plt.show()
+
+</code></pre>
+<hr />
+<h2 id="step-4-the-integrator-velocity-verlet">Step 4: The Integrator (Velocity Verlet)</h2>
+<p>We need an engine to move time forward. We use the <strong>Velocity Verlet</strong> algorithm.
+It is more accurate than simple Euler integration () because it calculates velocity at "half-steps," which helps conserve energy.</p>
+<p><strong>Run this cell to load the integrator:</strong></p>
+<pre><code class="language-python"># --- LOGIC ---
+def velocity_verlet_step(pos, vel, acc, dt):
+    &quot;&quot;&quot;
+    Moves the simulation forward by one step 'dt'
+    &quot;&quot;&quot;
+    # 1. First Half-Kick: Update velocity halfway
+    vel_half = vel + 0.5 * acc * dt
+
+    # 2. Drift: Update position using half-velocity
+    pos_new = pos + vel_half * dt
+    pos_new = pos_new % BOX_SIZE # Wrap around box
+
+    # 3. Calculate new forces at new positions
+    acc_new, pe = compute_forces(pos_new)
+
+    # 4. Second Half-Kick: Finish updating velocity
+    vel_new = vel_half + 0.5 * acc_new * dt
+
+    return pos_new, vel_new, acc_new, pe
+
+print(&quot;Block 3: Integrator Loaded. The Engine is ready.&quot;)
+</code></pre>
+<hr />
+<h2 id="step-5-the-simulation-loop">Step 5: The Simulation Loop</h2>
+<p>Now we combine the blocks into a loop.</p>
+<ol>
+<li>Initialize positions.</li>
+<li>Calculate initial forces.</li>
+<li>Loop 200 times, calling <code>velocity_verlet_step</code> each time.</li>
+<li>Plot the positions and the Energy.</li>
+</ol>
+<p><strong>Run this cell to watch the movie:</strong></p>
+<pre><code class="language-python"># --- SETUP ---
+DT = 0.005             # Reduced slightly for better stability
+STEPS = 200            # How long to run
+
+# CRITICAL FIX: Use the safe variables from Cell 2!
+# We use .copy() so if you run this cell twice, it doesn't mess up the original data.
+pos = positions.copy()
+vel = velocities.copy()
+
+# Calculate initial forces based on these SAFE positions
+acc, pot_e = compute_forces(pos) 
+
+# --- ANIMATION SETUP ---
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# 1. Particle View
+ax1.set_xlim(0, BOX_SIZE); ax1.set_ylim(0, BOX_SIZE)
+ax1.set_title(f&quot;Simulation (N={len(pos)})&quot;)
+particles = ax1.scatter([], [], s=150, c=[], cmap='coolwarm', edgecolors='k')
+
+# 2. Energy View
+ax2.set_xlim(0, STEPS)
+ax2.set_title(&quot;Energy Conservation&quot;)
+ax2.set_xlabel(&quot;Time Step&quot;); ax2.set_ylabel(&quot;Energy&quot;)
+
+# Initialize lines
+line_ke, = ax2.plot([], [], 'r-', label='Kinetic')
+line_pe, = ax2.plot([], [], 'b-', label='Potential')
+line_tot, = ax2.plot([], [], 'k--', label='Total', lw=2)
+ax2.legend()
+
+history_ke, history_pe, history_tot = [], [], []
+
+# Pre-calculate initial energy to start the graph at t=0
+initial_ke = 0.5 * MASS * np.sum(np.sum(vel**2, axis=1))
+history_ke.append(initial_ke)
+history_pe.append(pot_e)
+history_tot.append(initial_ke + pot_e)
+
+def update(frame):
+    global pos, vel, acc
+
+    # CALL THE INTEGRATOR
+    pos, vel, acc, pe = velocity_verlet_step(pos, vel, acc, DT)
+
+    # CALCULATE KINETIC ENERGY
+    ke = 0.5 * MASS * np.sum(np.sum(vel**2, axis=1))
+
+    # STORE DATA
+    history_ke.append(ke); history_pe.append(pe); history_tot.append(ke+pe)
+
+    # UPDATE VISUALS
+    particles.set_offsets(pos)
+    particles.set_array(np.linalg.norm(vel, axis=1)) # Color by speed
+
+    x = range(len(history_ke))
+    line_ke.set_data(x, history_ke)
+    line_pe.set_data(x, history_pe)
+    line_tot.set_data(x, history_tot)
+
+    # Auto-scale the energy plot
+    if len(history_ke) &gt; 1:
+        min_y = min(min(history_pe), min(history_ke))
+        max_y = max(max(history_pe), max(history_ke))
+        ax2.set_ylim(min_y - 5, max_y + 5)
+
+    return particles, line_ke, line_pe, line_tot
+
+anim = animation.FuncAnimation(fig, update, frames=STEPS, interval=30, blit=False)
+plt.close()
+HTML(anim.to_jshtml())
+
+</code></pre>
+<hr />
+<h2 id="exercise-1-the-broken-physics-explosion">Exercise 1: The Broken Physics (Explosion)</h2>
+<p>What happens if we take a "Time Step" that is too large?
+In this exercise, we set <code>DT = 0.05</code>.</p>
+<p><strong>Task:</strong> Run the cell below. Look at the Black Line (Total Energy).
+<strong>Observation:</strong> Energy is not conserved! It explodes upwards. This demonstrates why MD requires small timesteps (usually 1 femtosecond).</p>
+<pre><code class="language-python"># --- EXERCISE 1 ---
+DT_BROKEN = 0.05       # &lt;--- TOO LARGE! 
+STEPS = 100
+
+# Reset
+pos = np.random.rand(30, 2) * BOX_SIZE
+vel = (np.random.rand(30, 2) - 0.5) * 2.0
+acc, _ = compute_forces(pos)
+
+fig, ax = plt.subplots(figsize=(6,4))
+ax.set_title(&quot;Exercise 1: Broken Physics (Energy Explosion)&quot;)
+ax.set_xlim(0, STEPS)
+l_tot, = ax.plot([], [], 'k--', label='Total Energy', lw=2)
+ax.legend()
+hist_tot = []
+
+def update_ex1(frame):
+    global pos, vel, acc
+    pos, vel, acc, pe = velocity_verlet_step(pos, vel, acc, DT_BROKEN)
+    ke = 0.5 * MASS * np.sum(vel**2)
+    hist_tot.append(ke + pe)
+    l_tot.set_data(range(len(hist_tot)), hist_tot)
+    ax.set_ylim(min(hist_tot)-10, max(hist_tot)+10)
+    return l_tot,
+
+anim = animation.FuncAnimation(fig, update_ex1, frames=STEPS, interval=30, blit=True)
+plt.close()
+HTML(anim.to_jshtml())
+
+
+</code></pre>
+<hr />
+<h2 id="exercise-2-solid-phase-crystallization">Exercise 2: Solid Phase (Crystallization)</h2>
+<p>Can simple spheres form a solid crystal?
+Here, we increase the density (<code>N=64</code> in a small box) and lower the temperature (very small velocities).</p>
+<p><strong>Task:</strong> Run the cell and watch the atoms. They should jiggle in place, forming a lattice.</p>
+<pre><code class="language-python"># --- EXERCISE 2 ---
+N_SOLID = 64
+BOX_SOLID = 8.0
+DT = 0.01
+
+# Initialize in a grid to help crystallization
+grid_n = int(np.ceil(np.sqrt(N_SOLID)))
+spacing = BOX_SOLID / grid_n
+x = np.linspace(spacing/2, BOX_SOLID-spacing/2, grid_n)
+y = np.linspace(spacing/2, BOX_SOLID-spacing/2, grid_n)
+xv, yv = np.meshgrid(x, y)
+pos = np.column_stack((xv.ravel(), yv.ravel()))[:N_SOLID]
+
+# Very small velocities (Cold)
+vel = (np.random.rand(N_SOLID, 2) - 0.5) * 0.1 
+acc, _ = compute_forces(pos)
+
+fig, ax = plt.subplots(figsize=(6,6))
+ax.set_xlim(0, BOX_SOLID); ax.set_ylim(0, BOX_SOLID)
+ax.set_title(&quot;Exercise 2: Solid Phase Formation&quot;)
+parts = ax.scatter([], [], s=200, c='blue', edgecolors='k')
+
+def update_solid(frame):
+    global pos, vel, acc
+    pos, vel, acc, _ = velocity_verlet_step(pos, vel, acc, DT)
+    parts.set_offsets(pos)
+    return parts,
+
+anim = animation.FuncAnimation(fig, update_solid, frames=200, interval=50, blit=True)
+plt.close()
+HTML(anim.to_jshtml())
+</code></pre>
+<hr />
+<h2 id="exercise-3-how-long-does-md-actually-take">Exercise 3: How Long Does MD Actually Take?</h2>
+<p>In the lecture notes, we emphasized that real simulations require <strong>billions of timesteps</strong> and are impossible to run on a laptop. But <em>why exactly</em>? Let's measure it ourselves.</p>
+<p>This exercise does two things:
+1. <strong>Times</strong> the main simulation loop for our 20-particle system.
+2. <strong>Scales</strong> the particle count and plots how runtime grows — revealing the $O(N^2)$ bottleneck in <code>compute_forces</code>.</p>
+<h3 id="part-a-timing-the-main-loop">Part A: Timing the Main Loop</h3>
+<p><strong>Run this cell to time 200 steps of the simulation:</strong></p>
+<pre><code class="language-python">import time
+
+# --- SETUP (same as Step 5) ---
+DT = 0.005
+STEPS = 200
+
+pos = positions.copy()
+vel = velocities.copy()
+acc, _ = compute_forces(pos)
+
+# --- TIMED LOOP ---
+start_time = time.perf_counter()
+
+for step in range(STEPS):
+    pos, vel, acc, _ = velocity_verlet_step(pos, vel, acc, DT)
+
+end_time = time.perf_counter()
+
+wall_time_s = end_time - start_time
+time_per_step_ms = (wall_time_s / STEPS) * 1000
+
+print(&quot;=&quot; * 45)
+print(f&quot;  Particles (N)      : {N_PARTICLES}&quot;)
+print(f&quot;  Steps completed    : {STEPS}&quot;)
+print(f&quot;  Total wall time    : {wall_time_s:.3f} seconds&quot;)
+print(f&quot;  Time per step      : {time_per_step_ms:.3f} ms&quot;)
+print(&quot;=&quot; * 45)
+
+# --- SCALE UP: How long for a REAL simulation? ---
+# A real MD run targets ~1 microsecond = 1,000,000 steps at dt=1fs
+REAL_STEPS = 1_000_000
+projected_s = (wall_time_s / STEPS) * REAL_STEPS
+projected_days = projected_s / 86400
+
+print(f&quot;\n  Projected time for {REAL_STEPS:,} steps:&quot;)
+print(f&quot;  → {projected_s:,.1f} seconds  ({projected_days:.1f} days)&quot;)
+print(f&quot;\n  This is why we need supercomputers!&quot;)
+</code></pre>
+<h3 id="part-b-the-on2-scaling-problem">Part B: The $O(N^2)$ Scaling Problem</h3>
+<p>The <code>compute_forces</code> function loops over every <strong>pair</strong> of atoms. For $N$ atoms, there are $N(N-1)/2$ pairs. Double the atoms, and you quadruple the work.</p>
+<p>Let's measure this directly:</p>
+<pre><code class="language-python">import time
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- PARAMETERS ---
+# Test a range of particle counts
+particle_counts = [5, 10, 20, 40, 80, 160]
+TIMING_STEPS = 50          # Steps per timing run (keep short for large N)
+timings = []
+
+print(f&quot;{'N':&gt;6} | {'Time/step (ms)':&gt;16} | {'Pairs':&gt;10}&quot;)
+print(&quot;-&quot; * 38)
+
+for N in particle_counts:
+    # Place N atoms randomly (no overlap check for speed)
+    test_pos = np.random.rand(N, 2) * BOX_SIZE
+    test_vel = (np.random.rand(N, 2) - 0.5)
+    test_acc, _ = compute_forces(test_pos)
+
+    # Time TIMING_STEPS steps
+    t0 = time.perf_counter()
+    for _ in range(TIMING_STEPS):
+        test_pos, test_vel, test_acc, _ = velocity_verlet_step(
+            test_pos, test_vel, test_acc, DT
+        )
+    t1 = time.perf_counter()
+
+    ms_per_step = ((t1 - t0) / TIMING_STEPS) * 1000
+    n_pairs = N * (N - 1) // 2
+    timings.append(ms_per_step)
+    print(f&quot;{N:&gt;6} | {ms_per_step:&gt;16.4f} | {n_pairs:&gt;10,}&quot;)
+
+# --- PLOT ---
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Left: Raw timing
+axes[0].plot(particle_counts, timings, 'o-', color='steelblue', lw=2, ms=8)
+axes[0].set_xlabel(&quot;Number of Particles (N)&quot;, fontsize=12)
+axes[0].set_ylabel(&quot;Wall Time per Step (ms)&quot;, fontsize=12)
+axes[0].set_title(&quot;Raw Scaling: Time vs. N&quot;, fontsize=13)
+axes[0].grid(True, alpha=0.4)
+
+# Right: Log-log plot to reveal the power law
+axes[1].loglog(particle_counts, timings, 'o-', color='crimson', lw=2, ms=8, label='Measured')
+
+# Overlay a reference O(N^2) line
+N_arr = np.array(particle_counts, dtype=float)
+ref = timings[0] * (N_arr / particle_counts[0])**2
+axes[1].loglog(particle_counts, ref, 'k--', lw=1.5, alpha=0.6, label=r'$O(N^2)$ reference')
+
+axes[1].set_xlabel(&quot;Number of Particles (N)&quot;, fontsize=12)
+axes[1].set_ylabel(&quot;Wall Time per Step (ms)&quot;, fontsize=12)
+axes[1].set_title(r&quot;Log-Log Scaling (slope ≈ 2 confirms $O(N^2)$)&quot;, fontsize=13)
+axes[1].legend()
+axes[1].grid(True, which='both', alpha=0.3)
+
+plt.suptitle(&quot;compute_forces Scaling Analysis&quot;, fontsize=14, fontweight='bold', y=1.02)
+plt.tight_layout()
+plt.show()
+
+print(&quot;\nConclusion: The log-log slope ≈ 2 confirms O(N²) scaling.&quot;)
+print(&quot;Real codes use neighbor lists + cutoffs to reduce this to ~O(N).&quot;)
+</code></pre>
+<h3 id="what-does-this-mean-in-practice">What Does This Mean in Practice?</h3>
+<p>The table below uses your measured <code>time_per_step</code> to project realistic runtimes. Real MD codes (LAMMPS, GROMACS) use <strong>neighbor lists</strong> and parallel GPUs to achieve close to $O(N)$ scaling — but the same physics applies.</p>
+<pre><code class="language-python"># --- PROJECTION TABLE ---
+# Uses the per-step time measured in Part A
+
+print(f&quot;\nProjection based on N={N_PARTICLES} atoms, {time_per_step_ms:.3f} ms/step\n&quot;)
+print(f&quot;{'Target simulation':25} | {'Steps needed':&gt;14} | {'Estimated time':&gt;16}&quot;)
+print(&quot;-&quot; * 60)
+
+scenarios = [
+    (&quot;100 steps (this tutorial)&quot;,   100),
+    (&quot;1,000 steps&quot;,                 1_000),
+    (&quot;100,000 steps&quot;,               100_000),
+    (&quot;1 µs (1,000,000 steps)&quot;,      1_000_000),
+    (&quot;1 ms (1,000,000,000 steps)&quot;,  1_000_000_000),
+]
+
+for label, n_steps in scenarios:
+    total_s = (time_per_step_ms / 1000) * n_steps
+    if total_s &lt; 60:
+        time_str = f&quot;{total_s:.2f} sec&quot;
+    elif total_s &lt; 3600:
+        time_str = f&quot;{total_s/60:.1f} min&quot;
+    elif total_s &lt; 86400:
+        time_str = f&quot;{total_s/3600:.1f} hours&quot;
+    else:
+        time_str = f&quot;{total_s/86400:.0f} days&quot;
+    print(f&quot;{label:25} | {n_steps:&gt;14,} | {time_str:&gt;16}&quot;)
+
+print(&quot;\nThis is why HPC clusters running thousands of CPU cores in&quot;)
+print(&quot;parallel — like Anvil — are essential for real research!&quot;)
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
